@@ -1,0 +1,162 @@
+:root {
+    --bg-color: #0a0a0c;
+    --card-bg: #13131a;
+    --neon-orange: #ff4500;
+    --neon-cyan: #00ffcc;
+    --text-main: #ffffff;
+    --text-muted: #7e7e8c;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Courier New', Courier, monospace; /* Kiber uslub uchun unikal shrift */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.cyber-container {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+/* Glitch Sarlavha */
+.glitch-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    color: var(--neon-cyan);
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px var(--neon-cyan);
+    margin-bottom: 40px;
+}
+
+/* Anime Blok */
+.anime-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--card-bg);
+    border: 1px solid #222230;
+    padding: 20px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+@media(min-width: 600px) {
+    .anime-hero { flex-direction: row; }
+}
+
+.poster-wrapper {
+    position: relative;
+    flex: shrink 0;
+}
+
+.neon-image {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid var(--neon-orange);
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
+}
+
+.status-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: red;
+    font-size: 10px;
+    padding: 3px 8px;
+    font-weight: bold;
+    border-radius: 4px;
+    box-shadow: 0 0 8px red;
+}
+
+.anime-details h2 {
+    color: var(--neon-orange);
+    margin-top: 0;
+    letter-spacing: 2px;
+}
+
+.description {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Kiber Input */
+.cyber-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #050507;
+    border: 1px solid var(--neon-cyan);
+    padding: 12px;
+    color: #fff;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    box-shadow: inset 0 0 5px rgba(0, 255, 204, 0.2);
+}
+
+/* Fasl Tugmalari */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 30px 0 20px 0;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    border-color: var(--neon-orange);
+    color: var(--neon-orange);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+}
+
+/* Qismlar Grid tizimi */
+.episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+.episode-card {
+    background: #171721;
+    border: 1px solid #2a2a3a;
+    padding: 15px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.episode-card:hover {
+    border-color: var(--neon-cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+}
+
+.ep-num {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.ep-play {
+    font-size: 11px;
+    color: var(--neon-cyan);
+}
