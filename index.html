@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animecore Studios | Chainsaw Man</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="cyber-container">
+        <!-- Glitch effektli Header -->
+        <h1 class="glitch-title" data-text="ANIMECORE_STUDIOS">ANIMECORE_STUDIOS</h1>
+        
+        <!-- Anime Poster & Info -->
+        <div class="anime-hero">
+            <div class="poster-wrapper">
+                <!-- Yuqori sifatli Arra odam rasmi -->
+                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=600" alt="Chainsaw Man" class="neon-image">
+                <div class="status-badge">LIVE</div>
+            </div>
+            
+            <div class="anime-details">
+                <h2>ARRA ODAM / CHAINSAW MAN</h2>
+                <p class="description">
+                    Denji va uning zanjirli arra iblisi Pochita sahnalari. Texno-shovqin, qon va neon chiroqlar ostidagi dahshatli kurash.
+                </p>
+                
+                <!-- Bot sozlamalari (Telefondan turib o'zgartirish oson bo'lishi uchun shu yerda) -->
+                <div class="config-box">
+                    <input type="text" id="tgChatId" placeholder="Telegram ID raqamingizni kiriting" class="cyber-input">
+                    <small>Botdan video olish uchun <a href="https://t.me/userinfobot" target="_blank" style="color: #00ffcc;">@userinfobot</a> orqali ID'ingizni bilib yozing.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- FASLLAR NAVIGATSIYASI -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchSeason(1)">FASL 01</button>
+            <button class="tab-btn" onclick="switchSeason(2)">FASL 02</button>
+        </div>
+
+        <!-- QISMLAR RO'YXATI -->
+        <div id="season-1" class="episodes-grid">
+            <!-- 1-Fasl qismlari (12 ta qism loop o'rniga HTMLda tayyor) -->
+            <!-- Har bir tugma bosilganda Telegramga so'rov ketadi -->
+            <script>
+                for(let i=1; i<=12; i++) {
+                    document.write(`
+                        <div class="episode-card" onclick="sendEpisode(1, ${i})">
+                            <div class="ep-num">EPISODE ${i < 10 ? '0'+i : i}</div>
+                            <div class="ep-play">🚀 BOTDAN OLISH</div>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+
+        <div id="season-2" class="episodes-grid" style="display: none;">
+            <div class="episode-card" onclick="sendEpisode(2, 1)">
+                <div class="ep-num">EPISODE 01</div>
+                <div class="ep-play">🚀 BOTDAN OLISH</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TELEGRAM BOT SOZLAMALARI
+        // BotFather'dan olgan tokeningizni shu yerga yozasiz (Yashirish shartmas, chunki serverda emasmiz)
+        const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"; 
+
+        // Fasllarni almashtirish drayveri
+        function switchSeason(season) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if(season === 1) {
+                document.getElementById('season-1').style.display = 'grid';
+                document.getElementById('season-2').style.display = 'none';
+            } else {
+                document.getElementById('season-1').style.display = 'none';
+                document.getElementById('season-2').style.display = 'grid';
+            }
+        }
+
+        // Qismni bot orqali foydalanuvchiga yuborish
+        function sendEpisode(season, episode) {
+            const chatId = document.getElementById('tgChatId').value;
+            if(!chatId) {
+                alert("Iltimos, avval Telegram ID raqamingizni kiriting!");
+                return;
+            }
+
+            // Xabar matni (Bu yerda hozircha matn, xohlasangiz yopiq kanaldagi video silkasini qo'yishingiz mumkin)
+            const text = `🔥 Animecore Studios\n\nArra Odam: ${season}-Fasl, ${episode}-qism yuklanmoqda...\n\n[Siz so'ragan video tez orada shu yerda paydo bo'ladi!]`;
+
+            // Telegram API'ga to'g'ridan-to'g'ri saytdan so'rov yuborish (No-Backend!)
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: text,
+                    parse_mode: "Markdown"
+                })
+            })
+            .then(res => {
+                if(res.ok) {
+                    alert(`✅ ${episode}-qism Telegram botingizga yuborildi! Botni tekshiring.`);
+                } else {
+                    alert("❌ Xatolik! Avval botga kirib /start bosganingizni yoki ID to'g'riligini tekshiring.");
+                }
+            })
+            .catch(err => alert("Aloqa xatosi!"));
+        }
+    </script>
+</body>
+</html>
+
