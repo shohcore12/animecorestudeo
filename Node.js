@@ -16,10 +16,10 @@ const { Telegraf, Markup } = require('telegraf');
 // ==========================================
 // 1. SOZLAMALAR (O'zingiznikiga almashtirasiz)
 // ==========================================
-const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';         // BotFather bergan token
-const CHANNEL_USERNAME = '@animecorestudeo';       // Majburiy kanal username'i (@ bilan)
+const BOT_TOKEN = '8881478478:AAFP9S_5LRIDChbTfayxJx22I1D3AKZ4Rdc';         // BotFather bergan token
+const CHANNEL_USERNAME = 'https://t.me/shohcore1';       // Majburiy kanal username'i (@ bilan)
 const CHANNEL_ID = -1001234567890;                // Animelar saqlangan kanal ID'si
-const WEBSITE_URL = 'https://animecorestudeo.github.io'; // Saytingiz havolasi
+const WEBSITE_URL = 'https://animecorestudeo.vercel.app/'; // Saytingiz havolasi
 const ADMIN_ID = '123456789';                     // Buyurtma boradigan Admin Telegram ID'si
 
 const bot = new Telegraf(BOT_TOKEN);
