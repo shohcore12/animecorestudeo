@@ -2033,35 +2033,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ==========================================================
 //  ANIME TELEGRAM BOT
 //  Oddiy va tushunarli qilib yozilgan (node-telegram-bot-api)
