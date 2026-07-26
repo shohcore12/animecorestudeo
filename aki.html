@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aki Hayakawa AI - Ultra Fluid iOS 18 Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.99) 100%), 
+                        url('a03dc92a6528b39fce71e850c12c47cd.gif') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .ios-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #090d16;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .splash-logo {
+            width: 95px;
+            height: 95px;
+            border-radius: 22px;
+            box-shadow: 0 0 35px rgba(100, 116, 139, 0.4);
+            object-fit: cover;
+            animation: pulseLogo 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.04); filter: brightness(1.15) drop-shadow(0 0 20px rgba(148, 163, 184, 0.5)); }
+        }
+
+        .ios-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            border-top-color: #64748b;
+            margin-top: 30px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ios-splash.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.08);
+        }
+
+        .ios-container {
+            width: 100%;
+            max-width: 480px;
+            height: 88vh;
+            background: rgba(15, 23, 42, 0.25);
+            backdrop-filter: blur(50px) saturate(190%);
+            -webkit-backdrop-filter: blur(50px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 38px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.95),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.95) translateY(15px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-container.app-ready {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: dynamicIsland 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s both;
+        }
+
+        @keyframes dynamicIsland {
+            0% { transform: translateY(-40px) scaleX(0.7); opacity: 0; filter: blur(5px); }
+            100% { transform: translateY(0) scaleX(1); opacity: 1; filter: blur(0); }
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #cbd5e1;
+            border: 2.5px solid #020617;
+            border-radius: 50%;
+        }
+
+        .header-info h2 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-info p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 0px; 
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            letter-spacing: -0.1px;
+            color: #ffffff;
+            animation: bubblePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; filter: blur(3px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+
+        .bot-message {
+            background: rgba(30, 41, 59, 0.5);
+            align-self: flex-start;
+            border-radius: 22px 22px 22px 6px;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+            align-self: flex-end;
+            border-radius: 22px 22px 6px 22px;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 22px rgba(15, 23, 42, 0.4);
+        }
+
+        /* Typing Wave Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            align-self: flex-start;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: iosWave 1.2s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes iosWave {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-input-area {
+            padding: 16px 20px 28px 20px;
+            background: rgba(2, 6, 23, 0.7);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .buttons-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .buttons-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .quest-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: #e2e8f0;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-btn::after {
+            content: "〉";
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s;
+        }
+
+        .quest-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .quest-btn:hover::after {
+            transform: translateX(3px);
+            color: #ffffff;
+        }
+
+        .quest-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.12);
+            opacity: 0.85;
+        }
+        
+        .quest-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ios-splash" id="splashScreen">
+    <img src="OIP (3).webp" alt="Logo" class="splash-logo">
+    <div class="ios-spinner"></div>
+</div>
+
+<div class="ios-container" id="appContainer">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="avatar-wrapper">
+            <img src="OIP (3).webp" alt="Aki" class="avatar">
+            <span class="online-dot"></span>
+        </div>
+        <div class="header-info">
+            <h2>Aki Hayakawa 🕶️</h2>
+            <p>4-maxsus boʻlim iblis ovchisi</p>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+            Salom. Men 4-maxsus boʻlim iblis ovchisiman. Agar muhim topshiriq yoki savollaringiz boʻlsa, eshitaman. Vaqtimiz kam, shuning uchun loʻndaroq gapiring. Nima soʻramoqchi edingiz?
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <div class="buttons-grid" id="buttonsGrid">
+        </div>
+    </div>
+</div>
+
+<script {nonce}>
+
+    const scenario = [
+        { q: "Nega aynan Iblis ovchisi boʻlishni tanlagansan?", a: "Mening boshqa yoʻlim yoʻq edi. Bolaligimda Qurol Iblisi (Gun Devil) koʻz oʻngimda butun oilamni va uyimni yoʻq qilib ketgan. Oʻsha kundan boshlab mening hayotimda yagona maqsad qoldi — uni topish va oʻz qoʻllarim bilan parchalab tashlash. Buning uchun hayotimni berishga ham tayyorman." },
+        { q: "Denji va Pover bilan bir uyda yashash qiyin emasmi?", a: "Ular haqida gapirmang... Biri uyga umuman qaramaydi, hamma narsani sindiradi, choʻmilmaydi. Ikkinchisi esa faqat goʻsht yeydi va asabimga tegadi. Har kuni uyni tozalash va ularning orqasidan yigʻishtirishdan charchadim. Lekin... hozir ularsiz uy judayam huvillab qoladigandek tuyuladi." },
+        { q: "Himeno haqida nima deb oʻylaysan?", a: "Himeno — mening birinchi haqiqiy ustozim va eng yaqin sherigim edi. U meni bu daxshatli dunyoda omon qolishga oʻrgatgan. Uning oʻlimi menga juda ogʻir botdi... Men unga chekishni tashlashga vaʼda bergandim, lekin u ketganidan keyin uning xotirasi uchun faqat oʻsha sigaretlarni chekadigan boʻldim." },
+        { q: "Qurshovdagi qiliching (Curse Devil) qanday ishlaydi?", a: "Bu qilich juda daxshatli narx evaziga ishlaydi. Agar men raqibga shu qilich bilan uch marta zarba bersam, Lanat Iblisi uning hayotini yakunlaydi. Lekin buning evaziga u mening umrimdan bir necha yilni tortib oladi. Har safar uni ishlatganimda oʻlimga bir qadam yaqinlashaman." },
+        { q: "Kelajak Iblisi (Future Devil) senga nima dedi?", a: "U mening oʻng koʻzimda yashaydi va menga bir necha soniya keyingi kelajakni koʻrsatadi. U menga kelajakda qanday daxshatli oʻlim topishimni aytdi... va bu oʻlim Denji bilan bogʻliq ekanligini bildirdi. Lekin men taqdirni oʻzgartirish uchun baribir kurashaman." },
+        { q: "Tulki Iblisi (Fox Devil) bilan shartnomang tugadimi?", a: "Ha, u bilan munosabatlarimiz tugadi. Janglarning birida men uni haddan tashqari xavfli raqibni (Katana Man) yeyishga majbur qildim. U taʼmimni yoqtirmadi va endi mening chaqiriqlarimga javob bermayapti. Iblislar bilan ishonchli shartnoma tuzish qiyin." },
+        { q: "Makimaga nega bunchalik qattiq ishonasan?", a: "Makima-san meni qutqargan va menga hayotda yangi maqsad bergan inson. Uning buyruqlari doim toʻgʻri va u insoniyat kelajagi uchun harakat qilmoqda. Men uning qarorlaridan hech qachon shubhalanmayman." },
+        { q: "Hayotda biror marta qoʻrqqanmisan?", a: "Iblis ovchisi boʻlgan odam qoʻrquvni unutishi kerak, chunki iblislar sening qoʻrquvingdan kuch oladi. Lekin hozir men oʻz oʻlimimdan qoʻrqmayman, balki atrofimdagi yaqin insonlarning navbatma-navbat oʻlib ketishidan daxshatli darajada qoʻrqaman." },
+        { q: "Boʻsh vaqtingda nima bilan shugʻullanasan?", a: "Asosan uyni tartibga keltiraman, keyingi vazifalar haqidagi hisobotlarni oʻqiyman va ovqat pishiraman. Agar Denji va Pover ovqatni maqtab yeyishsa, biroz boʻlsa ham charchogʻim chiqadi. Garchi buni ularga bildirmasam ham." },
+        { q: "Kelajakdan nima kutyapsan?", a: "Men uzoq kelajak haqida oʻylamayman. Mening umrim shundoq ham juda qisqa qoldi. Yagona istagim — men ketganimdan keyin ham Denji va Pover tinch, xavfsiz va baxtli yashashsa boʻldi." },
+        
+        // Ssenariydan tashqari qo'shimcha 5 ta xarakterga mos maxsus savollar
+        { q: "Sochingizni tepaga yigʻib bogʻlashingiz sababi nima?", a: "Bu shunchaki odat emas. Birinchidan, uzun sochlar jang paytida koʻrishga xalaqit beradi va xavfli. Ikkinchidan esa... bu sochni menga oʻz vaqtida Himeno shunday tartibli qilib yigʻib bogʻlashni oʻrgatgandi. Oʻshandan beri oʻzgartirmadim." },
+        { q: "Denji va Power tualetni toza tutishadimi?", a: "Iltimos, bu mavzuni ochmang... Power suvni oqizishni umuman bilmaydi, Denji esa hamma yoqni rasvo qiladi. Har kuni tualet talashishimiz va u yerdagi janjallar daxshatli tushning oʻzi. Baʼzida ularni maxsus boʻlimga qaytarib yuborgim keladi." },
+        { q: "Angel Devil (Farishta Iblis) haqida nima deysiz?", a: "U juda gʻalati va dangasa mavjudot, lekin unga nisbatan yomonligim yoʻq. Uning taʼsir kuchi daxshatli — tegib ketgan insonning umrini soʻrib oladi. U ham xuddi men kabi bu dunyoda juda koʻp azob koʻrganini his qilaman." },
+        { q: "Kishibe-san haqiqatan ham eng kuchli ovchimi?", a: "Ha, u haqiqiy mahorat egasi, lekin ayni paytda aqldan ozgan alkash. Biroq uning bir gapi juda toʻgʻri: 'Iblislar eng koʻp miyasi joyida boʻlmagan, aqldan ozgan ovchilardan qoʻrqishadi'. Menimcha, men hali ham haddan tashqari koʻp qaygʻuraman." },
+        { q: "Ertalabki kofe tayyorlash ritulingiz haqida eshitdik?", a: "Ertalab hammadan oldin turishni yaxshi koʻraman. Uy jim-jit boʻlganda kofe damlash va derazadan tashqarini kuzatish — kun davomida tinchlik topadigan yagona daqiqalarim. Chunki u ikkalasi turgandan keyin uydagi xotirjamlik tugaydi." }
+    ];
+
+    const chatMessages = document.getElementById('chatMessages');
+    const buttonsGrid = document.getElementById('buttonsGrid');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const splashScreen = document.getElementById('splashScreen');
+    const appContainer = document.getElementById('appContainer');
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            splashScreen.classList.add('fade-out');
+            appContainer.classList.add('app-ready');
+        }, 1500);
+    });
+
+    function initButtons() {
+        scenario.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.className = 'quest-btn';
+            btn.innerText = item.q;
+            btn.onclick = () => askAki(item.q, item.a);
+            buttonsGrid.appendChild(btn);
+        });
+    }
+
+    function askAki(question, answer) {
+        toggleButtons(true);
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.innerText = question;
+        chatMessages.insertBefore(userDiv, typingIndicator);
+        scrollToBottom();
+
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.innerText = answer;
+            chatMessages.insertBefore(botDiv, typingIndicator);
+
+            scrollToBottom();
+            toggleButtons(false);
+        }, 850);
+    }
+
+    function toggleButtons(disabled) {
+        const buttons = document.querySelectorAll('.quest-btn');
+        buttons.forEach(btn => btn.disabled = disabled);
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    initButtons();
+</script>
+
+</body>
+</html>

@@ -8,8 +8,15 @@
 </head>
 <body>
 
+<!-- Detail sahifada ham fon musiqa davom etsin desangiz shu tegni
+     script.js SITE_CONFIG.musicTracks bilan avtomatik boshqaradi. -->
+<audio id="bgMusic" loop></audio>
+
 <nav class="site-nav">
   <a href="index.html" class="brand">
+    <span class="mascot">
+      <span class="mascot-body"><span class="mascot-eye"></span></span>
+    </span>
     <span class="brand-mark">核</span>
     <span>AnimeCore<small>STUDIO ARCHIVE</small></span>
   </a>
@@ -18,7 +25,10 @@
     <a href="index.html#katalog">Katalog</a>
     <a href="index.html#studio">Studio haqida</a>
   </div>
-  <button class="nav-cta" onclick="window.location.href='index.html#katalog'">Katalogga qaytish</button>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Kun/tun rejimini almashtirish">&#9728;</button>
+    <button class="nav-cta" onclick="window.location.href='index.html#katalog'">Katalogga qaytish</button>
+  </div>
 </nav>
 
 <main id="detailRoot"></main>
@@ -32,6 +42,43 @@
     <p class="footer-meta">© 2026 AnimeCore Studio — Barcha huquqlar himoyalangan</p>
   </div>
 </footer>
+
+<div class="floating-widget music-widget">
+  <div class="widget-bubble" id="musicBubble"></div>
+  <div class="music-panel" id="musicPanel">
+    <p class="music-track-title" id="musicTrackTitle">Hali trek qo'shilmagan</p>
+    <div class="music-controls">
+      <button id="musicPrevBtn" aria-label="Oldingi trek">&#9198;</button>
+      <button id="musicPlayBtn" class="play-btn" aria-label="Ijro/pauza">&#9654;</button>
+      <button id="musicNextBtn" aria-label="Keyingi trek">&#9197;</button>
+    </div>
+    <div class="volume-row">
+      <span>&#128266;</span>
+      <input type="range" id="musicVolume" min="0" max="1" step="0.05" value="0.5">
+    </div>
+  </div>
+  <button class="widget-launcher" id="musicLauncher">
+    <span class="eq-bars"><span></span><span></span><span></span><span></span></span>
+    Musiqa
+  </button>
+</div>
+
+<div class="floating-widget ai-widget">
+  <div class="widget-bubble" id="aiBubble"></div>
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel-header">
+      <span class="ai-face"></span>
+      <b>AniArtifact</b>
+      <button class="ai-panel-close" id="aiPanelClose" aria-label="Yopish">&times;</button>
+    </div>
+    <div class="ai-panel-body" id="aiPanelBody"></div>
+    <div class="ai-choices" id="aiChoices"></div>
+  </div>
+  <button class="widget-launcher" id="aiLauncher">
+    <span class="ai-face"></span>
+    AniArtifact
+  </button>
+</div>
 
 <script src="script.js"></script>
 </body>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power AI - Ultra Fluid iOS 18 Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(10, 10, 18, 0.75) 0%, rgba(5, 5, 8, 0.98) 100%), 
+                        url('power.gif') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .ios-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050508;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .splash-logo {
+            width: 95px;
+            height: 95px;
+            border-radius: 22px;
+            box-shadow: 0 0 35px rgba(230, 57, 70, 0.5);
+            object-fit: cover;
+            animation: pulseLogo 1.4s ease-in-out infinite;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.06); filter: brightness(1.25) drop-shadow(0 0 20px rgba(230,57,70,0.7)); }
+        }
+
+        .ios-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            border-top-color: #ff3b30;
+            margin-top: 30px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ios-splash.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.08);
+        }
+
+        .ios-container {
+            width: 100%;
+            max-width: 480px;
+            height: 88vh;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(45px) saturate(210%);
+            -webkit-backdrop-filter: blur(45px) saturate(210%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 38px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.9),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.95) translateY(15px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-container.app-ready {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: dynamicIsland 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s both;
+        }
+
+        @keyframes dynamicIsland {
+            0% { transform: translateY(-40px) scaleX(0.7); opacity: 0; filter: blur(5px); }
+            100% { transform: translateY(0) scaleX(1); opacity: 1; filter: blur(0); }
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 59, 48, 0.4);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #24d153;
+            border: 2.5px solid #08080c;
+            border-radius: 50%;
+        }
+
+        .header-info h2 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-info p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 0px; 
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            letter-spacing: -0.1px;
+            color: #ffffff;
+            animation: bubblePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; filter: blur(3px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.08);
+            align-self: flex-start;
+            border-radius: 22px 22px 22px 6px;
+            border: 0.5px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #007AFF 0%, #0056D6 100%);
+            align-self: flex-end;
+            border-radius: 22px 22px 6px 22px;
+            box-shadow: 0 6px 22px rgba(0, 122, 255, 0.35);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            align-self: flex-start;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: iosWave 1.2s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes iosWave {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-input-area {
+            padding: 16px 20px 28px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .buttons-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .buttons-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .quest-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: #ffffff;
+            border: 0.5px solid rgba(255, 255, 255, 0.07);
+            padding: 14px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-btn::after {
+            content: "〉";
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.25);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s;
+        }
+
+        .quest-btn:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .quest-btn:hover::after {
+            transform: translateX(3px);
+            color: #ffffff;
+        }
+
+        .quest-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.15);
+            opacity: 0.85;
+        }
+        
+        .quest-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- iOS Launch Splash Screen -->
+<div class="ios-splash" id="splashScreen">
+    <img src="power (1).gif" alt="Logo" class="splash-logo">
+    <div class="ios-spinner"></div>
+</div>
+
+<div class="ios-container" id="appContainer">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="avatar-wrapper">
+            <img src="power (1).gif" alt="Power" class="avatar">
+            <span class="online-dot"></span>
+        </div>
+        <div class="header-info">
+            <h2>Power-sama 👑</h2>
+            <p>Oliy taxtda oʻtiribdi...</p>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+            HOY, INSON XALQI! Qarshingda buyuk va daxshatli Pover-sama turibdi! Tezda menga taʼzim qil! Agar aqlli savol bersang, balki senga javob berishni oʻylab koʻrarman. Qani, gapir!
+        </div>
+        
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Action Sheet Controls -->
+    <div class="chat-input-area">
+        <div class="buttons-grid" id="buttonsGrid">
+            <!-- Loaded dynamically via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // 10 ta asosiy + 5 ta yangi kengaytirilgan Power savol-javoblari ro'yxati
+    const scenario = [
+        { q: "Nega hech qachon choʻmilsang kelmaydi?", a: "CHUNKI BU VAQTNI BEKORGA SARFLASH! Insonlar nega har kuni suvga kirishini umuman tushunmayman! Mening buyuk tanamdan faqatgina gʻoliblik hidi keladi! Suv esa mening qonli kuchimni kamaytirishi mumkin, tushundingmi?!" },
+        { q: "Mushuging Nyako haqida gapirib ber.", a: "Nyako — dunyodagi eng goʻzal va eng aqlli mavjudot! U insonlardan ming marta yaxshiroq! Boshida uni yeb yubormoqchi edim, lekin u meni juda yaxshi koʻrib qoldi. Kim mening Nyakomga teginadigan boʻlsa, uning barcha qonini soʻrib olaman!" },
+        { q: "Agar sen dunyo prezidenti boʻlsang nima qilarding?", a: "VAXAXAXA! Eng zoʻr savol! Birinchidan, hamma insonlar uchun 100% soliq joriy qilaman! Ikkinchidan, hamma sabzavotlarni qonuniy ravishda taqiqlab, faqat goʻsht yeyishni majburiy qilaman! Va albatta, hamma menga har kuni sovgʻalar olib keladi!" },
+        { q: "Nega sabzavotlarni yoqtirmaysan? Doim goʻsht yeysanmi?", a: "Sabzavotlar — bu oʻt-oʻlan! Men iblisman, menga haqiqiy kuch beradigan narsa bu — GOʻSHT! Denji va Aki menga doim sabzavot yedirmoqchi boʻlishadi, lekin men ularni yashirincha tualetga oqizib yuboraman! Boni ularga aytma!" },
+        { q: "Denji bilan munosabatingiz qanday?", a: "Denji — mening birinchi raqamli qulim! Uning aqli juda past, shuning uchun uni boshqarish oson. Lekin... u Nyakoni qutqarishga yordam bergani uchun uni oʻz praporshigim deb eʼlon qilganman. Biz birga eng kuchli jamoamiz!" },
+        { q: "Aki Hayakawa haqida nima deysan?", a: "U judayam asabiy va zerikarli inson! Doim orqamdan yurib uyni toza tutishni talab qiladi. Lekin tan olish kerak, u pishiradigan goʻshtli ovqatlar daxshatli darajada mazali! Shuning uchun uning uyida tekinga yashab turibman." },
+        { q: "Sening qon burchaklaring (shohlaring) nega oʻsib ketadi?", a: "Agar men haddan tashqari koʻp qon ichib yuborsam, shohlarim daxshatli darajada katta boʻlib ketadi va kuchimni nazorat qilish qiyinlashadi! Shunday paytda Aki mening qonimni soʻrib, meni tinchlantirishiga toʻgʻri keladi. Kuchim bepoyon-da!" },
+        { q: "Makima haqida nima deb oʻylaysan?", a: "M-Makima?.. (Ovozi pasayib, qoʻrqib ketadi). U... u judayam yaxshi rahbar. Men undan umuman qoʻrqmayman, shunchaki... uning buyruqlarini hurmat qilaman, xolos! Ha, shunday! Keyingi savolga oʻt tezroq!" },
+        { q: "Jang paytida nega doim birinchilardan boʻlib qochib ketasan?", a: "BU QOCHISH EMAS, STRATEGIK CHEKINISH! Men dushmanning ruhiyatini sindirish uchun ataylab uzoqlashaman! Buyuk strategiyani tushunish siz kabi oddiy insonlarga emas!" },
+        { q: "Haqiqatdan ham eng kuchli iblis senmisan?", a: "ALBATTA! Qarshingda Qon Iblisining eng oliy formasi turibdi! Mening qonli nayzalarim har qanday raqibni bitta zarbda parchalab tashlaydi! Men — eng zoʻridaman!" },
+        
+        // Ssenariydan tashqari qo'shimcha 5 ta qiziqarli va xarakterga mos savollar
+        { q: "Tualetni ishlatgandan keyin suvni oqizasizmi?", a: "NIMA?! Inson zoti, sen haddingdan oşyapsan! Nega men oʻzimdan qolgan buyuk asarlarni suvga oqizib yoʻq qilishim kerak?! Bu tabiat qonunlariga zid! Aki bu haqda har kuni baqiradi, lekin menga baribir!" },
+        { q: "Koʻkrak qismingiz nima uchun soxta (pad)?", a: "YOLGʻON! KIM AYTDI BUNI?! Buni senga oʻsha ahmoq Denji aytdimi?! Mening tanam har tomonlama mukammal va daxshatli jozibador! Bunday gaplarni tarqatgan odamni qon nayzam bilan teshib tashlayman!" },
+        { q: "Agar it bilan mushuk urushsa, kim yutadi?", a: "Albatta mushuklar! Itlar — insonlarning quli, ular zerikarli. Mushuklar esa xuddi menga oʻxshab takabbur, aqlli va erkin! Nyako bitta zarba bilan har qanday itni qochishga majbur qila oladi, vaxaxaxa!" },
+        { q: "Nega doim yolgʻon gapirasiz?", a: "Men yolgʻon gapirmayman, shunchaki haqiqatni oʻzimga moslab biroz chiroyli qilaman! Buyuk rahbarlar doim shunday qiladi. Agar men aybni boshqalarga agʻdarayotgan boʻlsam, demak, haqiqatdan ham ular aybdor!" },
+        { q: "Sizga qanday sovgʻalar yoqadi?", a: "Albatta eng qimmatbaho javohirlar, yangi soʻyilgan yangi goʻsht va menga atab yozilgan maqtovnomalar! Agar menga munosib sovgʻa olib kelmasang, sening qoningni oʻz qurolim uchun ozuqa qilib olaman, shuni bilib qoʻy!" }
+    ];
+
+    const chatMessages = document.getElementById('chatMessages');
+    const buttonsGrid = document.getElementById('buttonsGrid');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const splashScreen = document.getElementById('splashScreen');
+    const appContainer = document.getElementById('appContainer');
+
+    // Premium iOS App Launch Loader
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            splashScreen.classList.add('fade-out');
+            appContainer.classList.add('app-ready');
+        }, 1500);
+    });
+
+    function initButtons() {
+        scenario.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.className = 'quest-btn';
+            btn.innerText = item.q;
+            btn.onclick = () => askPower(item.q, item.a);
+            buttonsGrid.appendChild(btn);
+        });
+    }
+
+    function askPower(question, answer) {
+        toggleButtons(true);
+
+        // User iOS Message Bubble
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.innerText = question;
+        chatMessages.insertBefore(userDiv, typingIndicator);
+        scrollToBottom();
+
+        // iOS Fluid Typing Wave Active
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+
+        // Power-samaning o'ta tezkor yoki dabdabali javob berish vaqti
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+
+            // Power Reply Bubble
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.innerText = answer;
+            chatMessages.insertBefore(botDiv, typingIndicator);
+
+            scrollToBottom();
+            toggleButtons(false);
+        }, 750);
+    }
+
+    function toggleButtons(disabled) {
+        const buttons = document.querySelectorAll('.quest-btn');
+        buttons.forEach(btn => btn.disabled = disabled);
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    initButtons();
+</script>
+
+</body>
+</html>

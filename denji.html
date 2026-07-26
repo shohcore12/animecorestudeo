@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denji AI - Ultra Fluid iOS 18 Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(10, 10, 18, 0.7) 0%, rgba(5, 5, 8, 0.95) 100%), 
+                        url('chainsaw-man-gif-18.gif') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .ios-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .splash-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
+            animation: pulseLogo 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,69,0,0.6)); }
+        }
+
+        .ios-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            margin-top: 30px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ios-splash.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.08);
+        }
+
+        .ios-container {
+            width: 100%;
+            max-width: 480px;
+            height: 88vh;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(45px) saturate(220%);
+            -webkit-backdrop-filter: blur(45px) saturate(220%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 38px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.85),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.95) translateY(15px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-container.app-ready {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: dynamicIsland 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s both;
+        }
+
+        @keyframes dynamicIsland {
+            0% { transform: translateY(-40px) scaleX(0.7); opacity: 0; filter: blur(5px); }
+            100% { transform: translateY(0) scaleX(1); opacity: 1; filter: blur(0); }
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #24d153;
+            border: 2.5px solid #08080c;
+            border-radius: 50%;
+        }
+
+        .header-info h2 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-info p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 0px; 
+        }
+
+        /* Fluid Messages */
+        .message {
+            max-width: 80%;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            letter-spacing: -0.1px;
+            color: #ffffff;
+            animation: bubblePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; filter: blur(3px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.09);
+            align-self: flex-start;
+            border-radius: 22px 22px 22px 6px;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #007AFF 0%, #0056D6 100%);
+            align-self: flex-end;
+            border-radius: 22px 22px 6px 22px;
+            box-shadow: 0 6px 22px rgba(0, 122, 255, 0.35);
+        }
+
+        /* Typing Wave Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            align-self: flex-start;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: iosWave 1.2s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes iosWave {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* Bottom Control System */
+        .chat-input-area {
+            padding: 16px 20px 28px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .buttons-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .buttons-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .quest-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: #ffffff;
+            border: 0.5px solid rgba(255, 255, 255, 0.07);
+            padding: 14px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-btn::after {
+            content: "〉";
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.25);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s;
+        }
+
+        .quest-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .quest-btn:hover::after {
+            transform: translateX(3px);
+            color: #ffffff;
+        }
+
+        .quest-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.16);
+            opacity: 0.85;
+        }
+        
+        .quest-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- iOS Launch Splash Screen -->
+<div class="ios-splash" id="splashScreen">
+    <img src="OIP (4).webp" alt="Logo" class="splash-logo">
+    <div class="ios-spinner"></div>
+</div>
+
+<div class="ios-container" id="appContainer">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="avatar-wrapper">
+            <img src="OIP (3).webp" alt="Denji" class="avatar">
+            <span class="online-dot"></span>
+        </div>
+        <div class="header-info">
+            <h2>Denji</h2>
+            <p>Uchrashuvga qiz qidiryapti...</p>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+            Xoy, salom! Men Denjiman. Hozir jinnicha iblislar ham yo'q, Makima-san ham ko'rinmaydi... Zerikib o'tiribman. Menda savollar tiqilib yotibdimi deyman? Qani, birortasini boschi, daxshat javob beraman!
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <div class="buttons-grid" id="buttonsGrid">
+        </div>
+    </div>
+</div>
+<script>
+    
+    const scenario = [
+        { q: "Sening hayotdagi eng katta maqsading nima?", a: "Eee, hamma mendan daxshatli maqsadlarni kutadi... Lekin men shunchaki har kuni mazza qilib murabboli non yeyishni, issiq dushda choʻmilishni va... xullas, birorta qiz bilan yaqin bo'lishni xohlayman!" },
+        { q: "Nega Makimani bunchalik yaxshi koʻrasan?", a: "Chunki u hayotimda birinchi marta menga insondek muomala qilgan va meni quchoqlagan birinchi qiz! U judayam goʻzal, aqlli va hidi shunaqangi yoqimliki... U nima desa bajaraman!" },
+        { q: "Makima seni shunchaki ishlatayotgan boʻlsa-chi?", a: "Ey, tilingga ehtiyot boʻl! Makima-san unday qilmaydi! Agar... agar meni shunchaki ishlatayotgan boʻlsa ham... baribir menga farqi yoʻq! U bergan issiq ovqatlar uchun umrimni beraman." },
+        { q: "Arra odamga aylanish ogʻriqlimi?", a: "Toʻgʻrisini aytsam — daxshatli darajada ogʻriqli! Koʻkragimdagi ipni tortganimda, tana aʼzolarim orasidan haqiqiy arratishlar yorib chiqadi. Lekin jangda adrenalin urib ogʻriq esdan chiqadi!" },
+        { q: "Pover bilan munosbatingiz qanday?", a: "Umi? U shunchaki bosh ogʻriq! Doim menga buyruq beradi, uyni iflos qiladi va umuman choʻmilmaydi! Lekin Nyakoni qutqarganimizdan keyin xuddi aka-singildek boʻlib qoldik. Uni xafa qildirmayman!" },
+        { q: "Nega Rezeni tanlading?", a: "U... u baribir boshqacha edi-da... Menga birinchi marta kofe olib bergandi. Garchi meni oʻldirmoqchi boʻlgan boʻlsa ham, baribir u bilan uzoqlarga qochib ketishga tayyor edim. Lekin u kelmadi..." },
+        { q: "Pochita hozir qayerda?", a: "Pochita mening yuragimda! Biz oʻlishimiz kerak boʻlgan kechada u oʻz tanasini menga berdi. Hozir u mening ichimda yashayapti, shuning uchun men har doim u bilan birgaman." },
+        { q: "Aki bilan birga yashash qiyin emasmi?", a: "U judayam qattiqqoʻl va asabiy! Ertalabdan kechgacha uyni tozalaydi, tartib talab qiladi. Lekin ovqatni daxshatli darajada mazali pishiradi, shuning uchun unga chidayman!" },
+        { q: "Hayotingda eng mazali yegan ovqating nima?", a: "Makima-sanning uyida yegan karrili guruch va sendvich! Undan oldin esa hayotimda faqat bir boʻlak quruq non yeb yurardim. Shuning uchun oʻsha kunni hech qachon unutmayman." },
+        { q: "Senga qarshi chiqqan iblislarga nima deysan?", a: "Mening hayotim endigina yaxshilanayotgan edi! Kim mening baxtli hayotimga, nonimga yoki qizlar bilan munosbatimga xalaqit bersa — hammasini zanjirli arra bilan parchalab tashlayman!" },
+        { q: "Agar senga juda ko'p pul berishsa nima qilarding?", a: "Pul?? Ooo! Birinchi bo'lib daxshatli ko'p murabbo va non sotib olaman! Keyin esa... eng qimmat kinoteatrga borib, qizlar bilan eng oxirgi qatorda o'tirib kino ko'raman!" },
+        { q: "Makima seni itim desa xafa bo'lmaysanmi?", a: "Nega xafa bo'lishim kerak? It bo'lish yomonmi? Agar Makima-sanning iti bo'lsam, u meni har kuni ovqatlantiradi, boshimni silaydi. Ko'chada och qolib o'lgandan ko'ra bu ming marta yaxshi!" },
+        { q: "Kishibe senga qanday ustoz?", a: "U haqiqiy alkash va maxluq! Bizni o'rgataman deb kuniga yuz marta o'ldirib tiriltiradi. Uni ko'rsam bo'ynim og'riydi. Lekin u bo'lmaganda allaqachon o'lib ketardik." },
+        { q: "Kobeni haqida nima deya olasan?", a: "U doim yig'laydi, daxshatli darajada qo'rqoq! Lekin ba'zida pichoq bilan shunaqa tez harakat qiladiki, ko'zim ilg'amay qoladi. Menimcha u ham qiynalgan, shuning uchun unga rahmim keladi." },
+        { q: "Kelajakdan nima kutyapsan?", a: "Kelajak? Menga uzoq rejalarning keragi yo'q. Ertaga ham ertalab uyg'onib, issiqgina ovqat yeb, Makima-sanning yonida ishlay olsam — mana shu men uchun eng zo'r kelajak!" },
+        { q: "Seningcha eng kuchli iblis qaysi?", a: "To'g'risini aytsam, To'pponcha (Gun Devil) iblisidan hamma daxshatli darajada qo'rqadi. Lekin menga farqi yo'q, agar u menga xalaqit bersa, uni ham bo'laklab tashlayman!" },
+        { q: "Maktabda o'qishni xohlarmiding?", a: "Maktab? Ha, judayam! Men hech qachon maktabga bormaganman, hatto harflarni ham zo'rg'a taniyman. Oddiy o'quvchi bo'lish, qizlar bilan darsdan keyin qaytish... bu ajoyib bo'lardi!" },
+        { q: "Himeno haqida nima deb o'ylaysan?", a: "U juda quvnoq va aqlli qiz edi... Ko'zidagi bog'ichi unga yarashardi. U Akini judayam yaxshi ko'rardi, afsuski o'sha jangda... Xullas, uni eslash menga biroz og'ir." },
+        { q: "Zanjirli arra rejimi qancha davom etadi?", a: "Tanamdagi benzin va qon tugaguncha! Agar jang paytida iblislar qonini ichib tursam, cheksiz jang qila olaman. Qon — mening yonilg'im!" },
+        { q: "Pochita bilan qanday tanishgansan?", a: "Dadamning qarzlaridan qochib yurganimda, otam qabri yonida yarador Pochitani ko'rib qolganman. Unga qonimni berdim va biz do'st bo'ldik. U mening birinchi haqiqiy do'stimdi!" },
+        { q: "Iblis ovchilari orasida senga kim eng ko'p yoqadi?", a: "Albatta Makima-san! Keyin esa... balki Pover? Garchi aqldan ozgan bo'lsa ham, u bilan zerikmaysiz. Aki esa shunchaki zerikarli aka kabi." },
+        { q: "Nega har doim ko'kragingdagi ipni tortasan?", a: "Chunki o'sha ip — mening Pochita bilan bog'lanish yo'lim! Uni tortganimda yuragim motor kabi vizillab ishga tushadi va men dunyodagi eng daxshatli arra odamga aylanaman!" },
+        { q: "Seningcha haqiqiy baxt nima?", a: "Haqiqiy baxt? Ertalab tumon muzlatgichni ochganingda ichi to'la go'sht va murabbo bo'lishi! Va kechki payt seni kutib oladigan birorta chiroyli qiz bo'lsa, tamom, boshqa narsa kerakmas!" },
+        { q: "Seni aldash osonmi?", a: "Hamma meni ahmoq deydi... Ha, balki men aqlli emasdirman, ayniqsa chiroyli qizlar biror narsa so'rasa, rad eta olmayman. Lekin bu mening aybim emas-ku, to'g'rimi?!" },
+        { q: "Iblis go'shtini yeyish qanaqa ta'm beradi?", a: "Fuuuu! Daxshatli darajada sasigan va achchiq! Lekin jangda omon qolish va qayta tiklanish uchun ularning qonini ichishga va go'shtini chaynashga majburman." },
+        { q: "Sening eng sevimli kiyiming qaysi?", a: "Iblis ovchilarining qora kostyum-shimi! Uni birinchi marta kiyganimda o'zimni daxshatli darajada kelishgan va muhim odamdek his qilgandim. Uni juda ehtiyot qilaman!" },
+        { q: "Uchrashuvga chiqish sirlaring bormi?", a: "Qanaqa sir? Men hali birorta qiz bilan normal uchrashuvga chiqmaganman! Agar chiqsam... unga eng shirin nonlarimni beraman va u nima xohlasa gapirib beraveraman!" },
+        { q: "Nyakoni (mushukni) yaxshi ko'rasanmi?", a: "Boshida u mushukdan nafratlanardim! Pover uni deb meni deyarli o'ldirib qo'yishiga sal qoldi. Lekin hozir u ham oilamiz a'zosi, unga har kuni baliq beraman." },
+        { q: "Iblislar dunyoni egallasa nima qilasan?", a: "Ular dunyoni egallasa, mening murabboli nonlarim va kinoteatrlarim yo'q bo'lib ketadi-ku?! Shunday ekan, bunga hech qachon yo'l qo'ymayman, hammasini tilka-porka qilaman!" },
+        { q: "Suhbatimiz oxirida menga nima deya olasan?", a: "Xullas shunaqa! Agar senda ortiqcha go'sht yoki murabbo bo'lsa, menga berib ket. Va asosiysi — hayotda nima bo'lsa ham, hech qachon taslim bo'lma, tushundingmi?!" }
+    ];
+
+    const chatMessages = document.getElementById('chatMessages');
+    const buttonsGrid = document.getElementById('buttonsGrid');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const splashScreen = document.getElementById('splashScreen');
+    const appContainer = document.getElementById('appContainer');
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            splashScreen.classList.add('fade-out');
+            appContainer.classList.add('app-ready');
+        }, 1800); 
+    });
+
+    function initButtons() {
+        scenario.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.className = 'quest-btn';
+            btn.innerText = item.q;
+            btn.onclick = () => askDenji(item.q, item.a);
+            buttonsGrid.appendChild(btn);
+        });
+    }
+
+    function askDenji(question, answer) {
+        toggleButtons(true);
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.innerText = question;
+        chatMessages.insertBefore(userDiv, typingIndicator);
+        scrollToBottom();
+
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.innerText = answer;
+            chatMessages.insertBefore(botDiv, typingIndicator);
+
+            scrollToBottom();
+            toggleButtons(false);
+        }, 850);
+    }
+
+    function toggleButtons(disabled) {
+        const buttons = document.querySelectorAll('.quest-btn');
+        buttons.forEach(btn => btn.disabled = disabled);
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    initButtons();
+</script>
+
+</body>
+</html>

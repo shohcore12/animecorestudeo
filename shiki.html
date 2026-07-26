@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiki Ichinose AI - Tougen Anki Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(20, 10, 10, 0.9) 0%, rgba(5, 2, 2, 0.99) 100%), 
+                        url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIzN3VxbXU3djFyeWp6ODNpeGN0dmhqcjFrODFmYm10Zmx5ZHh5eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Vz9ek7uw6BRJf0WK99/giphy.gif') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        /* iOS Premium Splash Screen Animatsiyasi */
+        .ios-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #090303;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .splash-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            box-shadow: 0 0 35px rgba(255, 69, 0, 0.6);
+            object-fit: cover;
+            animation: pulseLogo 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 25px rgba(255, 0, 0, 0.7)); }
+        }
+
+        .ios-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            border-top-color: #ff4500;
+            margin-top: 30px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ios-splash.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.08);
+        }
+
+        /* Premium iOS Dynamic Glassmorphism Container */
+        .ios-container {
+            width: 100%;
+            max-width: 480px;
+            height: 88vh;
+            background: rgba(25, 10, 10, 0.35);
+            backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 38px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.95),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.95) translateY(15px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-container.app-ready {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Dynamic Island Kirish Effekti bilan sarlavha */
+        .chat-header {
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: dynamicIsland 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1) 0.4s both;
+        }
+
+        @keyframes dynamicIsland {
+            0% { transform: translateY(-40px) scaleX(0.7); opacity: 0; filter: blur(5px); }
+            100% { transform: translateY(0) scaleX(1); opacity: 1; filter: blur(0); }
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 69, 0, 0.5);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #ff4500;
+            border: 2.5px solid #050202;
+            border-radius: 50%;
+        }
+
+        .header-info h2 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-info p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 0px; 
+        }
+
+        /* Fluid Messages */
+        .message {
+            max-width: 82%;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            letter-spacing: -0.1px;
+            color: #ffffff;
+            animation: bubblePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; filter: blur(3px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+
+        .bot-message {
+            background: rgba(35, 20, 20, 0.65);
+            align-self: flex-start;
+            border-radius: 22px 22px 22px 6px;
+            border: 0.5px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #b22222 0%, #5c0606 100%);
+            align-self: flex-end;
+            border-radius: 22px 22px 6px 22px;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 22px rgba(178, 34, 34, 0.3);
+        }
+
+        /* Typing Wave Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            align-self: flex-start;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: iosWave 1.2s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes iosWave {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* Bottom Control System */
+        .chat-input-area {
+            padding: 16px 20px 28px 20px;
+            background: rgba(5, 2, 2, 0.85);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .buttons-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .buttons-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Ultra Fluid iOS Interactive Button */
+        .quest-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: #e2e8f0;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-btn::after {
+            content: "〉";
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s;
+        }
+
+        .quest-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 69, 0, 0.3);
+            color: #ffffff;
+        }
+
+        .quest-btn:hover::after {
+            transform: translateX(3px);
+            color: #ff4500;
+        }
+
+        .quest-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 69, 0, 0.15);
+            opacity: 0.85;
+        }
+        
+        .quest-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- iOS Launch Splash Screen -->
+<div class="ios-splash" id="splashScreen">
+    <img src="https://i.pinimg.com/736x/88/ca/d9/88cad9ef0536fae7e65fcbc5960098df.jpg" alt="Logo" class="splash-logo">
+    <div class="ios-spinner"></div>
+</div>
+
+<div class="ios-container" id="appContainer">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="avatar-wrapper">
+            <img src="https://i.pinimg.com/736x/88/ca/d9/88cad9ef0536fae7e65fcbc5960098df.jpg" alt="Shiki" class="avatar">
+            <span class="online-dot"></span>
+        </div>
+        <div class="header-info">
+            <h2>Shiki Ichinose 🔴🔫</h2>
+            <p>Oni qoni va Kishin avlodi</p>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+            Yee! Nima gap? Men bilan gaplashgani keldingmi? Menga qara, pistoletning yangi qismini yigʻayotgan joyimda xalaqit bermasang boʻldi. Agar Momotarolar haqida biror maʼlumot bilsang yoki qonimdan qanday qurol yaratishimni koʻrmoqchi boʻlsang, soʻra, tezroq hal qilamiz!
+        </div>
+        
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Action Sheet Controls -->
+    <div class="chat-input-area">
+        <div class="buttons-grid" id="buttonsGrid">
+            <!-- Loaded dynamically via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const scenario = [
+        { q: "Nega aynan qurollarga bu qadar qiziqasan?", a: "Bilmadim, yoshligimdan qurollar, ayniqsa toʻpponchalar meni oʻziga jalb qiladi. Ularni qismlarga ajratish va qayta yigʻish men uchun eng zoʻr meditatsiya! Oniligim uygʻongach, qonimdan qurol yarata olishim esa eng zoʻr sovgʻa boʻldi." },
+        { q: "Oni qonini qanday qilib oʻqotar qurolga aylantirasan?", a: "Bu bizning 'Qon tutilishi' (Blood Eclipse) deb ataladigan kuchimiz. Men oʻz qonimni manipulyatsiya qilib, miyamda tasavvur qilgan har qanday oʻqotar qurolni — pistolet, avtomat yoki snayperni yaratishim mumkin. Faqat bitta muammo: haddan tashqari koʻp qon ishlatsam, oʻlim xavfi bor!" },
+        { q: "Otang Tsuyoshi haqida gapirib ber.", a: "Tsuyoshi... u mening asrab olgan otam edi. Uni juda qattiq yaxshi koʻrardim. U aslida Momotaro (Onilarni ovlovchi) boʻlgan, lekin meni qutqarish va insondek tarbiyalash uchun oʻz burchidan voz kechgan. U men uchun hayotini berdi, men esa uning oʻchini olishga qasamyod qilganman!" },
+        { q: "Kishin farzandi (Child of the Kishin) ekanliging nimani anglatadi?", a: "Men shunchaki oddiy Oni emasman. Men buyuk Kishinning (Iblislar qirolining) toʻgʻridan-toʻgʻri sakkiz farzandidan biriman. Shuning uchun menda olov elementi bor. Olovli Oni kuchi oʻqlarimni yanada halokatli va tezkor qiladi, lekin buni koʻp ishlatsam umrim qisqaradi." },
+        { q: "Rasetsu akademiyasiga nega kirding?", a: "Bu joy Oni bolalarini Momotarolardan himoya qilish va ularni jang qilishga oʻrgatadigan maxfiy maktab. Otam oʻldirilgandan keyin u yerga bordim. Naito-sensei va u yerdagi boshqa gʻalati sinfdoshlarim bilan birga kuchayish uchun mashq qilyapman." },
+        { q: "Jin Kougasaki bilan munosabatlaring qanday?", a: "U mening xonadoshim va eng katta raqibim! Doim jizzaki yuradi va yuzidagi tikilgan chiziqlari bilan qoʻrqinchli koʻrinadi. Biz doim urishamiz, lekin jang maydonida bir-birimizni soʻzsiz tushunamiz. Yomon bola emas, xullas." },
+        { q: "Naito Mudano qanaqa oʻqituvchi?", a: "U bizning jiddiy, doim rolikli konkida uchib yuradigan va gapni qisqa qiladigan ustozimiz. Juda kuchli va uning quroli oddiy soyabon! Agar darsda ahmoqlik qilsak, bizni ayamay kaltaklaydi, lekin bizni chin dildan himoya qilishini ham bilaman." },
+        { q: "Dushmaningiz bo'lgan Momotarolar o'zi kimlar?", a: "Ular qadimiy afsonaviy qahramon Momotaro avlodlari. Ular oʻzlarini adolat himoyachisi deb hisoblashadi va Onilarni dunyodan butunlay yoʻq qilishni xohlashadi. Lekin ular aslida qonxoʻr maxluqlar! Men ularga kim aslida yirtqich ekanini koʻrsatib qoʻyaman." },
+        { q: "Qizgʻin jang vaqtida 'Berserk' (aqldan ozish) holatiga tushishing rostmi?", a: "Afsuski, ha. Agar Oni oʻz his-tuygʻularini jilovlay olmasa, vahshiyona tabiat boshqaruvni qoʻlga oladi. Men aqlimni yoʻqotib, atrofimdagi dushmanmi-doʻstmi hammaga hujum qilib ketaman. Buni nazorat qilishni oʻrganyapman." },
+        { q: "Maqsading nima? Kelajakda nima qilmoqchisan?", a: "Mening asosiy maqsadim — otamni oʻldirgan Samidare Momoyani topib, oʻldirish. Va eng muhimi, Onilar va insonlar hech qanday qoʻrquvsiz, birga kulib yashashi mumkin boʻlgan dunyoni yaratish!" }
+    ];
+
+    const chatMessages = document.getElementById('chatMessages');
+    const buttonsGrid = document.getElementById('buttonsGrid');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const splashScreen = document.getElementById('splashScreen');
+    const appContainer = document.getElementById('appContainer');
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            splashScreen.classList.add('fade-out');
+            appContainer.classList.add('app-ready');
+        }, 1500);
+    });
+
+    function initButtons() {
+        scenario.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.className = 'quest-btn';
+            btn.innerText = item.q;
+            btn.onclick = () => askShiki(item.q, item.a);
+            buttonsGrid.appendChild(btn);
+        });
+    }
+
+    function askShiki(question, answer) {
+        toggleButtons(true);
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.innerText = question;
+        chatMessages.insertBefore(userDiv, typingIndicator);
+        scrollToBottom();
+
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
+
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.innerText = answer;
+            chatMessages.insertBefore(botDiv, typingIndicator);
+
+            scrollToBottom();
+            toggleButtons(false);
+        }, 850); // Shiki jonli va tezkorroq javob qaytaradi
+    }
+
+    function toggleButtons(disabled) {
+        const buttons = document.querySelectorAll('.quest-btn');
+        buttons.forEach(btn => btn.disabled = disabled);
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    initButtons();
+</script>
+
+</body>
+</html>

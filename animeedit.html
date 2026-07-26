@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnimeCore Studio</title>
+<link rel="stylesheet" href="animeedit.css">
+
+</head>
+<body>
+
+<div class="intro" id="intro">
+<video src=""></video>
+  <video class="intro-video" id="introVideo" playsinline preload="auto">
+    <source src="6999063_0.mp4" type="video/mp4">
+  </video>
+  <div class="intro-scrim"></div>
+
+  <div class="intro-topbar">
+    <span class="brand-mark">AnimeCore Studio</span>
+    <button class="telegram-btn" id="skipBtn" title="O'tkazib yuborish">
+      <svg viewBox="0 0 24 24"><path d="M21.9 3.5 2.7 11.1c-1.2.5-1.2 1.2-.2 1.5l4.9 1.5 1.9 5.8c.2.6.4.8.9.8.5 0 .7-.2 1-.5l2.4-2.3 4.9 3.6c.9.5 1.5.2 1.8-.8L23.9 4.6c.4-1.2-.4-1.7-1.5-1.2Z"/></svg>
+      asosi sahifaga o'tish
+    </button>
+  </div>
+
+  <div class="start-overlay" id="startOverlay">
+    <h1 class="start-logo">Anime<em>Core</em><span class="studio-word">Studio</span></h1>
+    <button class="start-btn" id="startBtn">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      Videoni ijro etish
+    </button>
+  </div>
+
+  <div class="intro-progress"><div class="intro-progress-bar" id="progressBar"></div></div>
+  <div class="intro-note" id="introNote"></div>
+</div>
+
+<div class="main-site" id="mainSite">
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">Anime<em>Core</em> Studio</div>
+
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.29 14.29l4.7 4.7 1.42-1.41-4.7-4.7A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Edit qidirish...">
+      </div>
+
+      <a href="#" class="telegram-btn" id="tgHeaderBtn" title="Telegram kanal">
+        <svg viewBox="0 0 24 24"><path d="M21.9 3.5 2.7 11.1c-1.2.5-1.2 1.2-.2 1.5l4.9 1.5 1.9 5.8c.2.6.4.8.9.8.5 0 .7-.2 1-.5l2.4-2.3 4.9 3.6c.9.5 1.5.2 1.8-.8L23.9 4.6c.4-1.2-.4-1.7-1.5-1.2Z"/></svg>
+        asosiy sahifaga o'tish
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow"><span class="rule"></span> Edit to'plami</div>
+    <h1>Qism-qism yig'ilgan <em>anime</em> montajlar galereyasi</h1>
+    <p>Har bir kartochka — alohida edit. Sichqonchani olib boring, ovozsiz oldindan ko'ring; bosing — kattalashadi va ovoz bilan namoyish etiladi.</p>
+    <div class="hero-count"><b id="visibleCount">20</b> ta edit mavjud</div>
+  </section>
+
+  <main class="gallery" id="gallery">
+    <div class="no-results" id="noResults">Hech narsa topilmadi. Boshqa nom bilan qidirib ko'ring.</div>
+  </main>
+
+  <footer>© AnimeCore Studio — barcha huquqlar himoyalangan. Offline rejimda ishlaydi.</footer>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-video-wrap" id="modalVideoWrap">
+      <video id="modalVideo" controls autoplay playsinline></video>
+      <div class="modal-placeholder">
+        <span>Video fayl topilmadi</span>
+        <span id="modalMissingName" style="color:#9c2431"></span>
+      </div>
+    </div>
+    <div class="modal-meta">
+      <div>
+        <span id="modalEp">EDIT #01</span>
+        <h2 id="modalTitle">Sarlavha</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="animeedit.js"></script>
+</body>
+</html>
