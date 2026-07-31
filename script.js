@@ -36,7 +36,7 @@ const ANIME_DATA = [
           {
             "num": 2,
             "title": "2-qism",
-            "src": "@AniDonUz (6).mp4"
+            "src": "https://ok.ru/videoembed/16064085166686"
           },
           {
             "num": 3,
@@ -2030,3 +2030,45 @@ document.addEventListener("DOMContentLoaded", () => {
   initAiWidget();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function loadEpisode(src) {
+  const playerBox = document.getElementById('player-container'); // Videongiz turgan konteynor ID si
+
+  if (src.includes('ok.ru/videoembed')) {
+    // ok.ru bo'lsa IFRAME orqali ochadi
+    playerBox.innerHTML = `
+      <iframe 
+        src="${src}" 
+        width="100%" 
+        height="500" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+      </iframe>`;
+  } else {
+    // Oddiy .mp4 fayl bo'lsa HTML5 video tegi orqali ochadi
+    playerBox.innerHTML = `
+      <video src="${src}" controls autoplay style="width: 100%; height: auto;"></video>`;
+  }
+}
