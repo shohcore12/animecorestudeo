@@ -31,7 +31,7 @@ const ANIME_DATA = [
           {
             "num": 1,
             "title": "1-qism",
-            "src": "@AniDonUz (5).mp4"
+            "src": "https://ok.ru/videoembed/16064085166686"
           },
           {
             "num": 2,
